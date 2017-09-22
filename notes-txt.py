@@ -10,8 +10,8 @@ def slugify(text):
 
 def createNote(title):
     print('Adding note...')
-    filename = '%s.txt' % slugify(title)
-    header = '# %s' % title
+    filename = '{}.txt'.format(slugify(title))
+    header = '# {}'.format(title)
     newNote = open(filename, 'w')
     newNote.write(header)
     newNote.close()
@@ -24,7 +24,7 @@ def edit(filename):
 def listNotes():
     for index, file in enumerate(listdir('.')):
         if fnmatch.fnmatch(file, '*.txt'):
-            print ('[%d] %s' % (index, file))
+            print ('[{}] {}'.format(index, file))
 
 def addNote(args):
     createdNote = createNote(args.note_title)
