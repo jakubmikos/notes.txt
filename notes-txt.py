@@ -3,15 +3,16 @@ import subprocess
 from os import listdir
 import fnmatch
 
+import argparse
+
 def slugify(text):
     return text.replace(' ', '-')
 
-def addNote(title):
+def createNote(title):
+    print('Adding note...')
     filename = '%s.txt' % slugify(title)
-    print (filename)
-    newNote = open(filename, 'w')
     header = '# %s' % title
-    print (header)
+    newNote = open(filename, 'w')
     newNote.write(header)
     newNote.close()
     return filename
@@ -24,18 +25,24 @@ def listNotes():
     for index, file in enumerate(listdir('.')):
         if fnmatch.fnmatch(file, '*.txt'):
             print ('[%d] %s' % (index, file))
+
+def addNote(args):
+    createdNote = createNote(args.note_title)
+    edit(createdNote)
+
+def listAll(args):
+    listNotes()
     
+parser = argparse.ArgumentParser(prog='Notes.txt', description='Notes.txt plaintext notes mamanger.')
+subparsers = parser.add_subparsers()
 
+parser_add = subparsers.add_parser('add', help='Add note')
+parser_add.add_argument('note_title', help='Note title')
+parser_add.set_defaults(func=addNote)
 
-print (argv)
-if len(argv) > 1:
-    command = argv[1]
-    if command == 'add':
-        print ('adding note...')
-        filename = addNote(argv[2])
-        edit(filename)
-    elif command == 'ls':
-        listNotes()
-    elif command == 'open':
+parser_list = subparsers.add_parser('ls', help='List all notes')
+parser_list.set_defaults(func=listAll)
 
+parsed = parser.parse_args()
+parsed.func(parsed)
 
